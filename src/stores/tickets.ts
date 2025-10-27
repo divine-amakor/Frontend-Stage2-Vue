@@ -40,6 +40,7 @@ export const useTicketStore = defineStore('tickets', () => {
       const currentTicket = tickets.value[index]!
       const updatedTicket: Ticket = {
         id: currentTicket.id,
+        userId: currentTicket.userId,
         title: updates.title ?? currentTicket.title,
         description: updates.description ?? currentTicket.description,
         status: updates.status ?? currentTicket.status,
