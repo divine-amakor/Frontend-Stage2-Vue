@@ -55,8 +55,8 @@ export const useTicketStore = defineStore('tickets', () => {
     return newTicket
   }
 
-  const updateTicket = (id: string, updates: Partial<Omit<Ticket, 'id' | 'createdAt'>>) => {
-    const index = tickets.value.findIndex(t => t.id === id)
+  const updateTicket = (id: string, userId: string, updates: Partial<Omit<Ticket, 'id' | 'userId' | 'createdAt'>>) => {
+    const index = tickets.value.findIndex(t => t.id === id && t.userId === userId)
     if (index !== -1) {
       const currentTicket = tickets.value[index]!
       const updatedTicket: Ticket = {
@@ -76,8 +76,8 @@ export const useTicketStore = defineStore('tickets', () => {
     return null
   }
 
-  const deleteTicket = (id: string) => {
-    const index = tickets.value.findIndex(t => t.id === id)
+  const deleteTicket = (id: string, userId: string) => {
+    const index = tickets.value.findIndex(t => t.id === id && t.userId === userId)
     if (index !== -1) {
       tickets.value.splice(index, 1)
       saveTickets()

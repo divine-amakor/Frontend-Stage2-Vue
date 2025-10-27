@@ -317,7 +317,8 @@ const handleSubmit = async () => {
   try {
     if (showEditModal.value && editingTicket.value) {
       // Update existing ticket
-      const updated = ticketStore.updateTicket(editingTicket.value.id, {
+      const userId = authStore.user?.id || ''
+      const updated = ticketStore.updateTicket(editingTicket.value.id, userId, {
         title: form.title.trim(),
         description: form.description.trim() || undefined,
         status: form.status as 'open' | 'in_progress' | 'closed',
@@ -357,7 +358,8 @@ const handleSubmit = async () => {
 const handleDelete = () => {
   if (!ticketToDelete.value) return
 
-  const success = ticketStore.deleteTicket(ticketToDelete.value.id)
+  const userId = authStore.user?.id || ''
+  const success = ticketStore.deleteTicket(ticketToDelete.value.id, userId)
   
   if (success) {
     showToast('Ticket deleted successfully!', 'success')
