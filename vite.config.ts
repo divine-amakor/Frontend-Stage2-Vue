@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: 'Frontend Stage2 Vue',
+  base: '/Frontend-Stage2-Vue/',
   plugins: [vue(), vueJsx(), vueDevTools()],
   resolve: {
     alias: {
