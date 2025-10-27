@@ -15,6 +15,26 @@ export interface Ticket {
 export const useTicketStore = defineStore('tickets', () => {
   const tickets = ref<Ticket[]>([])
 
+  // Load tickets from localStorage on initialization
+  const loadTickets = () => {
+    const stored = localStorage.getItem('ticketapp_tickets')
+    if (stored) {
+      try {
+        tickets.value = JSON.parse(stored)
+      } catch {
+        tickets.value = []
+      }
+    }
+  }
+
+  // Save tickets to localStorage
+  const saveTickets = () => {
+    localStorage.setItem('ticketapp_tickets', JSON.stringify(tickets.value))
+  }
+
+  // Initialize tickets
+  loadTickets()
+
   const getUserTickets = (userId: string) => tickets.value.filter(t => t.userId === userId)
   
   const totalTickets = computed(() => (userId: string) => getUserTickets(userId).length)
@@ -31,6 +51,7 @@ export const useTicketStore = defineStore('tickets', () => {
       updatedAt: new Date().toISOString()
     }
     tickets.value.push(newTicket)
+    saveTickets()
     return newTicket
   }
 
@@ -49,6 +70,7 @@ export const useTicketStore = defineStore('tickets', () => {
         updatedAt: new Date().toISOString()
       }
       tickets.value[index] = updatedTicket
+      saveTickets()
       return updatedTicket
     }
     return null
@@ -58,6 +80,7 @@ export const useTicketStore = defineStore('tickets', () => {
     const index = tickets.value.findIndex(t => t.id === id)
     if (index !== -1) {
       tickets.value.splice(index, 1)
+      saveTickets()
       return true
     }
     return false
