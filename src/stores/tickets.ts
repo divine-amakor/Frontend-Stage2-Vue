@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 export interface Ticket {
   id: string
+  userId: string
   title: string
   description?: string
   status: 'open' | 'in_progress' | 'closed'
@@ -12,36 +13,20 @@ export interface Ticket {
 }
 
 export const useTicketStore = defineStore('tickets', () => {
-  const tickets = ref<Ticket[]>([
-    {
-      id: '1',
-      title: 'Fix login bug',
-      description: 'Users cannot login with special characters in password',
-      status: 'open',
-      priority: 'high',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '2',
-      title: 'Update documentation',
-      description: 'API documentation needs to be updated',
-      status: 'in_progress',
-      priority: 'medium',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ])
+  const tickets = ref<Ticket[]>([])
 
-  const totalTickets = computed(() => tickets.value.length)
-  const openTickets = computed(() => tickets.value.filter(t => t.status === 'open').length)
-  const inProgressTickets = computed(() => tickets.value.filter(t => t.status === 'in_progress').length)
-  const closedTickets = computed(() => tickets.value.filter(t => t.status === 'closed').length)
+  const getUserTickets = (userId: string) => tickets.value.filter(t => t.userId === userId)
+  
+  const totalTickets = computed(() => (userId: string) => getUserTickets(userId).length)
+  const openTickets = computed(() => (userId: string) => getUserTickets(userId).filter(t => t.status === 'open').length)
+  const inProgressTickets = computed(() => (userId: string) => getUserTickets(userId).filter(t => t.status === 'in_progress').length)
+  const closedTickets = computed(() => (userId: string) => getUserTickets(userId).filter(t => t.status === 'closed').length)
 
-  const createTicket = (ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const createTicket = (userId: string, ticketData: Omit<Ticket, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
     const newTicket: Ticket = {
       ...ticketData,
       id: Date.now().toString(),
+      userId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -83,6 +68,7 @@ export const useTicketStore = defineStore('tickets', () => {
 
   return {
     tickets,
+    getUserTickets,
     totalTickets,
     openTickets,
     inProgressTickets,

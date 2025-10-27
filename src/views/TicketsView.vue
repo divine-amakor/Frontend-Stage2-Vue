@@ -27,7 +27,7 @@
 
         <!-- Tickets List -->
         <div class="tickets-section">
-          <div v-if="ticketStore.tickets.length === 0" class="empty-state card">
+          <div v-if="userTickets.length === 0" class="empty-state card">
             <div class="empty-icon">🎫</div>
             <h3>No tickets yet</h3>
             <p>Create your first ticket to get started</p>
@@ -38,7 +38,7 @@
 
           <div v-else class="tickets-grid">
             <div
-              v-for="ticket in ticketStore.tickets"
+              v-for="ticket in userTickets"
               :key="ticket.id"
               class="ticket-card card"
             >
@@ -230,6 +230,11 @@ const toast = reactive({
   type: 'success'
 })
 
+const userTickets = computed(() => {
+  const userId = authStore.user?.id || ''
+  return ticketStore.getUserTickets(userId)
+})
+
 const resetForm = () => {
   form.title = ''
   form.description = ''
@@ -327,7 +332,8 @@ const handleSubmit = async () => {
       }
     } else {
       // Create new ticket
-      const newTicket = ticketStore.createTicket({
+      const userId = authStore.user?.id || ''
+      const newTicket = ticketStore.createTicket(userId, {
         title: form.title.trim(),
         description: form.description.trim() || undefined,
         status: form.status as 'open' | 'in_progress' | 'closed',

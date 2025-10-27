@@ -30,7 +30,7 @@
             <div class="stat-icon total">📊</div>
             <div class="stat-content">
               <h3>Total Tickets</h3>
-              <div class="stat-number">{{ ticketStore.totalTickets }}</div>
+              <div class="stat-number">{{ ticketStore.totalTickets(authStore.user?.id || '') }}</div>
             </div>
           </div>
 
@@ -38,7 +38,7 @@
             <div class="stat-icon open">🟢</div>
             <div class="stat-content">
               <h3>Open Tickets</h3>
-              <div class="stat-number">{{ ticketStore.openTickets }}</div>
+              <div class="stat-number">{{ ticketStore.openTickets(authStore.user?.id || '') }}</div>
             </div>
           </div>
 
@@ -46,7 +46,7 @@
             <div class="stat-icon progress">🟡</div>
             <div class="stat-content">
               <h3>In Progress</h3>
-              <div class="stat-number">{{ ticketStore.inProgressTickets }}</div>
+              <div class="stat-number">{{ ticketStore.inProgressTickets(authStore.user?.id || '') }}</div>
             </div>
           </div>
 
@@ -54,7 +54,7 @@
             <div class="stat-icon closed">⚫</div>
             <div class="stat-content">
               <h3>Closed Tickets</h3>
-              <div class="stat-number">{{ ticketStore.closedTickets }}</div>
+              <div class="stat-number">{{ ticketStore.closedTickets(authStore.user?.id || '') }}</div>
             </div>
           </div>
         </div>
@@ -141,7 +141,8 @@ const toast = reactive({
 })
 
 const recentTickets = computed(() => {
-  return ticketStore.tickets.slice(0, 3)
+  const userId = authStore.user?.id || ''
+  return ticketStore.getUserTickets(userId).slice(0, 3)
 })
 
 const showToast = (message: string, type: 'success' | 'error' = 'success') => {
